@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-tg-bg: #0f1721;
+  --color-tg-sidebar: #17212b;
+  --color-tg-sidebar-hover: #202b36;
+  --color-tg-accent: #2b5278;
+  --color-tg-accent-hover: #33618e;
+  --color-tg-text: #ffffff;
+  --color-tg-text-muted: #708499;
+  --color-tg-bubble-out: #2b5278;
+  --color-tg-bubble-out-text: #ffffff;
+  --color-tg-bubble-in: #182533;
+  --color-tg-bubble-in-text: #ffffff;
+  --color-tg-border: #0e1621;
+}
+
+@layer base {
+  body {
+    @apply bg-tg-bg text-tg-text font-sans antialiased;
+  }
+}
+
+/* Telegram-specific scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}

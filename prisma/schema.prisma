@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  credits       Float          @default(10.0)
+  apiKeys       String?        // Encrypted JSON string of keys
+  preferences   String?        // JSON string of UI preferences
+  conversations ConversationParticipant[]
+  tokenLogs     TokenLog[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Agent {
+  id           String         @id @default(cuid())
+  name         String
+  avatar       String?
+  systemPrompt String
+  provider     String         // 'openrouter' | 'huggingface' | 'gemini'
+  modelId      String
+  messages     Message[]
+  conversations ConversationParticipant[]
+  createdAt    DateTime       @default(now())
+}
+
+model Conversation {
+  id           String         @id @default(cuid())
+  type         String         @default("PRIVATE") // 'PRIVATE' | 'GROUP' | 'CHANNEL'
+  name         String?        // Required for GROUP and CHANNEL
+  avatar       String?
+  messages     Message[]
+  participants ConversationParticipant[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
+  agentId        String?
+  agent          Agent?       @relation(fields: [agentId], references: [id])
+  
+  @@unique([conversationId, userId])
+  @@unique([conversationId, agentId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  
+  senderType     String       // 'USER' | 'AGENT'
+  senderUserId   String?
+  senderAgentId  String?
+  agent          Agent?       @relation(fields: [senderAgentId], references: [id])
+  
+  tokenUsage     Int          @default(0)
+  tokenLog       TokenLog?
+  createdAt      DateTime     @default(now())
+}
+
+model TokenLog {
+  id          String   @id @default(cuid())
+  messageId   String   @unique
+  message     Message  @relation(fields: [messageId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  tokensUsed  Int
+  cost        Float
+  provider    String
+  modelId     String
+  createdAt   DateTime @default(now())
+}

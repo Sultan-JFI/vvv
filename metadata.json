@@ -1,0 +1,5 @@
+{
+  "name": "TeleGen AI",
+  "description": "A pixel-perfect Telegram clone for interacting with AI Agents, featuring multi-model groups and broadcast channels.",
+  "requestFramePermissions": []
+}
